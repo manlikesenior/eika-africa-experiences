@@ -64,7 +64,8 @@ export function sanitizeRichContent(dirty: string): string {
   const links = tempDiv.querySelectorAll("a[href]");
   links.forEach((link) => {
     const href = link.getAttribute("href");
-    if (href && (href.startsWith("http://") || href.startsWith("https://"))) {
+    // Add null/undefined and type check before calling startsWith()
+    if (href && typeof href === "string" && (href.startsWith("http://") || href.startsWith("https://"))) {
       link.setAttribute("target", "_blank");
       link.setAttribute("rel", "noopener noreferrer");
     }
@@ -97,6 +98,10 @@ export function sanitizeInput(input: string): string {
  * Sanitize URL to prevent javascript: and data: exploits
  */
 export function sanitizeUrl(url: string): string {
+  if (!url || typeof url !== "string") {
+    return "#";
+  }
+  
   const sanitized = url.trim().toLowerCase();
   
   // Block dangerous protocols

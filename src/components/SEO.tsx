@@ -15,7 +15,7 @@ interface SEOProps {
 
 const DEFAULT_TITLE = "Eika Africa Experience";
 const DEFAULT_DESCRIPTION = "Your trusted gateway to authentic, unforgettable adventures across Africa. Book safari tours, beach holidays, and more.";
-const DEFAULT_IMAGE = "/favicon.png";
+const DEFAULT_IMAGE = "/tour-images/favicon.png";
 const SITE_NAME = "Eika Africa Experience";
 
 /**
@@ -42,7 +42,11 @@ export function SEO({
 }: SEOProps) {
   const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} - Your Home to Unforgettable African Journeys`;
   const canonicalUrl = url || (typeof window !== "undefined" ? window.location.href : "");
-  const imageUrl = image.startsWith("http") ? image : `${typeof window !== "undefined" ? window.location.origin : ""}${image}`;
+  
+  // Add null/undefined check for image before calling startsWith
+  const imageUrl = (image && typeof image === "string" && image.startsWith("http")) 
+    ? image 
+    : `${typeof window !== "undefined" ? window.location.origin : ""}${image || DEFAULT_IMAGE}`;
   
   const defaultKeywords = [
     "Africa safari",
@@ -136,7 +140,7 @@ export function TourStructuredData({
     "@type": "TouristTrip",
     name,
     description,
-    image,
+    image: image || DEFAULT_IMAGE,
     touristType: "Safari",
     itinerary: {
       "@type": "ItemList",
@@ -180,7 +184,7 @@ export function OrganizationStructuredData() {
     name: SITE_NAME,
     description: DEFAULT_DESCRIPTION,
     url: typeof window !== "undefined" ? window.location.origin : "",
-    logo: typeof window !== "undefined" ? `${window.location.origin}/favicon.png` : "",
+    logo: typeof window !== "undefined" ? `${window.location.origin}/tour-images/favicon.png` : "",
     sameAs: [
       "https://twitter.com/EikaAfrica",
       // Add other social media URLs
